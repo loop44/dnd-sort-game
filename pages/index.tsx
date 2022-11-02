@@ -1,3 +1,5 @@
-const Home = () => <h1>Test task for Sirius Future</h1>;
+import Start from '../components/Start';
+
+const Home = () => <Start />;
 
 export default Home;
