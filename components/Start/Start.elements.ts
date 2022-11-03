@@ -18,7 +18,7 @@ export const StartPageWrapper = styled.div`
     outline: none;
   }
 
-  img {
+  & > img {
     z-index: 0;
   }
 `;
@@ -31,7 +31,7 @@ export const StartPageForm = styled.div`
   border-radius: 2.5rem;
   background: linear-gradient(198.41deg, #7f75f0 -41.27%, #101f32 97.44%);
   padding: 1.25rem;
-  z-index: 2;
+  z-index: 1;
 
   & > div {
     border-radius: 1.438rem;
