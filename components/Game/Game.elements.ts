@@ -31,6 +31,21 @@ export const Playground = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+
+  & > div:nth-of-type(even) {
+    align-self: flex-end;
+  }
+
+  & > div {
+    width: 131px;
+    height: 131px;
+    outline: none;
+
+    > img {
+      width: 131px;
+      height: 131px;
+    }
+  }
 `;
 
 export const Dock = styled.div`
@@ -41,5 +56,33 @@ export const Dock = styled.div`
 
   & > img {
     z-index: 2;
+  }
+
+  & > div {
+    width: 670px;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 110px;
+
+    > div {
+      width: 131px;
+      height: 131px;
+      background-color: rgba(0, 0, 0, 0.06);
+      box-shadow: inset 0px 4px 25px rgba(0, 0, 0, 0.25);
+      border-radius: 50%;
+      transition: background-color 0.2s ease-in-out;
+
+      img {
+        transition: all 0.3s ease-in-out;
+        width: 131px;
+        height: 131px;
+      }
+    }
   }
 `;
