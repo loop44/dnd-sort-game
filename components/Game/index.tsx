@@ -19,6 +19,7 @@ import {
   VALUES_SCHEMA
 } from '../../constants';
 import { useAudio } from '../../hooks/audio';
+import ArrowImg from '../../public/static/assets/arrow.png';
 import CloverImg from '../../public/static/assets/clover.png';
 import StarImg from '../../public/static/assets/star.png';
 import { randomInteger, randomIntegersArray } from '../../utils';
@@ -30,6 +31,7 @@ import {
   DraggableItemValue,
   GamePageInner,
   GamePageWrapper,
+  Hint,
   Playground,
   Result
 } from './Game.elements';
@@ -204,6 +206,10 @@ const Game: React.FC<GameProps> = ({ placeIndex, valueIndex, sort, setGameStarte
               )
             )}
           </Playground>
+          <Hint asc={sort === 0}>
+            <Image src={ArrowImg} alt="" fill />
+            <div>{sort === 0 ? 'По возрастанию' : 'По убыванию'}</div>
+          </Hint>
           <Dock>
             <Image src={DOCKS[randomTheme]} alt="" fill placeholder="blur" />
             <div>

@@ -6,7 +6,9 @@ export const StartPageWrapper = styled.div`
   position: relative;
   height: 100vh;
   width: 100%;
-  padding-top: 5.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   font-weight: 700;
   font-size: 1.5rem;
@@ -25,8 +27,7 @@ export const StartPageWrapper = styled.div`
 
 export const StartPageForm = styled.div`
   position: relative;
-  max-width: 43.75rem;
-  max-height: 41.25rem;
+  width: 43.75rem;
   margin: 0 auto;
   border-radius: 2.5rem;
   background: linear-gradient(198.41deg, #7f75f0 -41.27%, #101f32 97.44%);
