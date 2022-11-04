@@ -6,13 +6,15 @@ interface DraggableProps {
   id: UniqueIdentifier;
   children: React.ReactNode;
   img: StaticImageData;
+  value: string;
 }
 
-const Draggable: React.FC<DraggableProps> = ({ id, img, children }) => {
+const Draggable: React.FC<DraggableProps> = ({ id, img, value, children }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
     data: {
-      img
+      img,
+      value
     }
   });
   const style = transform

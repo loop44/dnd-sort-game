@@ -13,7 +13,12 @@ const Home = () => {
   const [valueIndex, setValueIndex] = useState<number | readonly number[]>(0);
   const [sort, setSortMode] = useState<number>(0);
   return gameStarted ? (
-    <Game />
+    <Game
+      placeIndex={placeIndex}
+      valueIndex={valueIndex}
+      sort={sort}
+      setGameStarted={setGameStarted}
+    />
   ) : (
     <Start
       setGameStarted={setGameStarted}

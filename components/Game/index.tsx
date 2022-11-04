@@ -1,5 +1,5 @@
 import Image, { StaticImageData } from 'next/image';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import {
   DndContext,
@@ -9,103 +9,73 @@ import {
   UniqueIdentifier
 } from '@dnd-kit/core';
 
-// Import images
-import dockBg1 from '../../public/static/assets/dock-bg/1.png';
-import dockBg2 from '../../public/static/assets/dock-bg/2.png';
-import dockBg3 from '../../public/static/assets/dock-bg/3.png';
-import dockBg4 from '../../public/static/assets/dock-bg/4.png';
-import bg1 from '../../public/static/assets/game-bg/1.jpg';
-import bg2 from '../../public/static/assets/game-bg/2.jpg';
-import bg3 from '../../public/static/assets/game-bg/3.jpg';
-import bg4 from '../../public/static/assets/game-bg/4.jpg';
-import item11 from '../../public/static/assets/items/items1/1.png';
-import item12 from '../../public/static/assets/items/items1/2.png';
-import item13 from '../../public/static/assets/items/items1/3.png';
-import item14 from '../../public/static/assets/items/items1/4.png';
-import item21 from '../../public/static/assets/items/items2/1.png';
-import item22 from '../../public/static/assets/items/items2/2.png';
-import item23 from '../../public/static/assets/items/items2/3.png';
-import item24 from '../../public/static/assets/items/items2/4.png';
-import item31 from '../../public/static/assets/items/items3/1.png';
-import item32 from '../../public/static/assets/items/items3/2.png';
-import item33 from '../../public/static/assets/items/items3/3.png';
-import item34 from '../../public/static/assets/items/items3/4.png';
-import item41 from '../../public/static/assets/items/items4/1.png';
-import item42 from '../../public/static/assets/items/items4/2.png';
-import item43 from '../../public/static/assets/items/items4/3.png';
-import item44 from '../../public/static/assets/items/items4/4.png';
+import {
+  ALPHABET,
+  BACKGROUNDS,
+  DOCKS,
+  PLACES_SCHEMA,
+  PLAYGROUND_ITEMS,
+  VALUES_SCHEMA
+} from '../../constants';
+import CloverImg from '../../public/static/assets/clover.png';
+import StarImg from '../../public/static/assets/star.png';
+import { randomInteger, randomIntegersArray } from '../../utils';
 import Draggable from '../Draggable';
 import Droppable from '../Droppable';
 
-import { Dock, GamePageInner, GamePageWrapper, Playground } from './Game.elements';
-
-const backgrounds = [bg1, bg2, bg3, bg4];
-const docks = [dockBg1, dockBg2, dockBg3, dockBg4];
-const playgroundItems = [
-  [item11, item12, item13, item14],
-  [item21, item22, item23, item24],
-  [item31, item32, item33, item34],
-  [item41, item42, item43, item44]
-];
-
-const randomTheme = Math.round(0 - 0.5 + Math.random() * (3 - 0 + 1));
-
-const randomItemsTheme = playgroundItems[randomTheme];
+import {
+  Dock,
+  DraggableItemValue,
+  GamePageInner,
+  GamePageWrapper,
+  Playground,
+  Result
+} from './Game.elements';
 
 type DraggableItem = {
-  id: UniqueIdentifier;
-  value: number;
+  id: UniqueIdentifier | number;
+  value: number | string;
   element: boolean;
   img: StaticImageData;
 };
 
-const mockItems: DraggableItem[] = [
-  {
-    id: 1,
-    value: 12,
-    element: false,
-    img: randomItemsTheme[Math.round(0 - 0.5 + Math.random() * (3 - 0 + 1))]
-  },
-  {
-    id: 2,
-    value: 54,
-    element: false,
-    img: randomItemsTheme[Math.round(0 - 0.5 + Math.random() * (3 - 0 + 1))]
-  },
-  {
-    id: 3,
-    value: 32,
-    element: false,
-    img: randomItemsTheme[Math.round(0 - 0.5 + Math.random() * (3 - 0 + 1))]
-  },
-  {
-    id: 4,
-    value: 32,
-    element: false,
-    img: randomItemsTheme[Math.round(0 - 0.5 + Math.random() * (3 - 0 + 1))]
-  },
-  {
-    id: 5,
-    value: 32,
-    element: false,
-    img: randomItemsTheme[Math.round(0 - 0.5 + Math.random() * (3 - 0 + 1))]
-  }
-];
+interface GameProps {
+  placeIndex: number | readonly number[];
+  valueIndex: number | readonly number[];
+  sort: number;
+  setGameStarted: Dispatch<SetStateAction<boolean>>;
+}
 
-const Game = () => {
+const Game: React.FC<GameProps> = ({ placeIndex, valueIndex, sort, setGameStarted }) => {
+  const [win, setWin] = useState<null | boolean>(null);
+  const [randomTheme] = useState(randomInteger(0, 3));
+  const [randomItemsTheme] = useState(PLAYGROUND_ITEMS[randomTheme]);
+
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [activeImg, setActiveImg] = useState<StaticImageData | string>('');
-  const [items, setItems] = useState<DraggableItem[]>(mockItems);
-  const [filteredItems, setFilteredItems] = useState<(DraggableItem | null)[]>([
-    null,
-    null,
-    null,
-    null,
-    null
-  ]);
+  const [activeValue, setActiveValue] = useState<string>('');
+
+  const max = VALUES_SCHEMA[valueIndex as keyof typeof VALUES_SCHEMA];
+  const count = PLACES_SCHEMA[placeIndex as keyof typeof PLACES_SCHEMA];
+
+  const [items, setItems] = useState<DraggableItem[]>(
+    randomIntegersArray(1, Number.isFinite(Number(max)) ? Number(max) + 1 : 34, count).map(
+      (item, index) => ({
+        id: index + 1,
+        value: Number.isFinite(Number(max)) ? item : ALPHABET[item],
+        element: false,
+        img: randomItemsTheme[randomInteger(0, 3)]
+      })
+    )
+  );
+
+  const [filteredItems, setFilteredItems] = useState<(DraggableItem | null)[]>(
+    items.map(() => null)
+  );
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveImg(event?.active?.data?.current?.img);
+    setActiveValue(event?.active?.data?.current?.value);
     setActiveId(event?.active?.id);
   };
 
@@ -178,13 +148,40 @@ const Game = () => {
 
     setItems(itemsChanged);
     setFilteredItems(filteredItemsCopy);
+
+    // Checking when an array is full
+    if (!filteredItemsCopy.includes(null)) {
+      const valuesArr = filteredItemsCopy.map((item) => item?.value);
+
+      if (Number.isFinite(Number(max))) {
+        // Numeric array validation
+        const sortedItems = sort
+          ? valuesArr
+              .slice()
+              .sort((a, b) => Number(b) - Number(a))
+              .join('')
+          : valuesArr
+              .slice()
+              .sort((a, b) => Number(a) - Number(b))
+              .join('');
+
+        setWin(valuesArr.join('') === sortedItems);
+      } else {
+        // Verifying a literal array
+        const sortedItems = sort
+          ? valuesArr.slice().sort().join('')
+          : valuesArr.slice().sort().reverse().join('');
+
+        setWin(valuesArr.join('') === sortedItems);
+      }
+    }
   };
 
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <GamePageWrapper>
         <Image
-          src={backgrounds[randomTheme]}
+          src={BACKGROUNDS[randomTheme]}
           alt=""
           priority
           fill
@@ -197,22 +194,24 @@ const Game = () => {
               item.element ? (
                 <div key={index} />
               ) : (
-                <Draggable key={index} id={item.id} img={item.img}>
+                <Draggable key={index} id={item.id} img={item.img} value={String(item.value)}>
                   <Image src={item.img} alt="" />
+                  <DraggableItemValue>{item.value}</DraggableItemValue>
                 </Draggable>
               )
             )}
           </Playground>
           <Dock>
-            <Image src={docks[randomTheme]} alt="" fill placeholder="blur" />
+            <Image src={DOCKS[randomTheme]} alt="" fill placeholder="blur" />
             <div>
               {filteredItems.map((item, index) => (
                 <Droppable key={index + 1} id={index + 1}>
                   {item === null ? (
                     <div key={index} />
                   ) : (
-                    <Draggable id={item.id} img={item.img}>
+                    <Draggable id={item.id} img={item.img} value={String(item.value)}>
                       <Image src={item.img} alt="" />
+                      <DraggableItemValue>{item.value}</DraggableItemValue>
                     </Draggable>
                   )}
                 </Droppable>
@@ -223,8 +222,41 @@ const Game = () => {
       </GamePageWrapper>
 
       <DragOverlay>
-        {activeId ? <Image src={activeImg} width={131} height={131} alt="" /> : null}
+        {activeId ? (
+          <>
+            <Image src={activeImg} width={131} height={131} alt="" />
+            <DraggableItemValue>{activeValue}</DraggableItemValue>
+          </>
+        ) : null}
       </DragOverlay>
+
+      <Result active={win !== null}>
+        <div>
+          <div className={win ? 'win' : 'lose'}>
+            {win ? (
+              <>
+                <h1>Победа</h1>
+                <p>Молодец! Ты успешно справился с заданием!</p>
+                <Image src={StarImg} alt="" />
+                <Image src={StarImg} alt="" />
+                <Image src={StarImg} alt="" />
+                <Image src={StarImg} alt="" />
+              </>
+            ) : (
+              <>
+                <h1>Ой-ой</h1>
+                <p>Не переживай, получится в другой раз!</p>
+                <Image src={CloverImg} alt="" />
+                <Image src={CloverImg} alt="" />
+                <Image src={CloverImg} alt="" />
+                <Image src={CloverImg} alt="" />
+              </>
+            )}
+
+            <button onClick={() => setGameStarted(false)}>Заново</button>
+          </div>
+        </div>
+      </Result>
     </DndContext>
   );
 };
