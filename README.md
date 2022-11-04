@@ -1,5 +1,7 @@
 # NOTE.me - notes taking app
 
+## [Try it online](https://dnd-sort-game.vercel.app/)
+
 ## Preview
 
 ![Preview Gif](./preview.gif)
