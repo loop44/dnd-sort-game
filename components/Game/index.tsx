@@ -13,10 +13,12 @@ import {
   ALPHABET,
   BACKGROUNDS,
   DOCKS,
+  MUSICS,
   PLACES_SCHEMA,
   PLAYGROUND_ITEMS,
   VALUES_SCHEMA
 } from '../../constants';
+import { useAudio } from '../../hooks/audio';
 import CloverImg from '../../public/static/assets/clover.png';
 import StarImg from '../../public/static/assets/star.png';
 import { randomInteger, randomIntegersArray } from '../../utils';
@@ -49,6 +51,7 @@ interface GameProps {
 const Game: React.FC<GameProps> = ({ placeIndex, valueIndex, sort, setGameStarted }) => {
   const [win, setWin] = useState<null | boolean>(null);
   const [randomTheme] = useState(randomInteger(0, 3));
+  const off = useAudio(MUSICS[randomInteger(0, 3)]);
   const [randomItemsTheme] = useState(PLAYGROUND_ITEMS[randomTheme]);
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
@@ -253,7 +256,14 @@ const Game: React.FC<GameProps> = ({ placeIndex, valueIndex, sort, setGameStarte
               </>
             )}
 
-            <button onClick={() => setGameStarted(false)}>Заново</button>
+            <button
+              onClick={() => {
+                setGameStarted(false);
+                off();
+              }}
+            >
+              Заново
+            </button>
           </div>
         </div>
       </Result>

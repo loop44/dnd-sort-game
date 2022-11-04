@@ -50,3 +50,5 @@ export const PLAYGROUND_ITEMS = [
 ];
 
 export const ALPHABET = ' АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+
+export const MUSICS = ['/music/1.mp3', '/music/2.mp3', '/music/3.mp3', '/music/4.mp3'];

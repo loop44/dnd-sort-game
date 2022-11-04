@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 
 import { css, Global } from '@emotion/react';
 
@@ -19,6 +20,10 @@ const globalStyles = css`
 
 const App = ({ Component, pageProps }: AppProps) => (
   <>
+    <Head>
+      <title>Sirius Future Game</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
     <Global styles={globalStyles} />
     <Component {...pageProps} />;
   </>
