@@ -8,7 +8,7 @@
 
 ## Description
 
-Beautiful animations, drag and drop control and server-side storage of the order of elements, as well as a dark theme and note search.
+Test task for Sirius Future
 
 ## Contact me
 
